@@ -1,0 +1,8 @@
+{
+    "feature": {
+        "name": "Falling Leaves",
+        "description": "(Optional) Falling Leaves mod adds a neat little particle effect to leaf blocks. https://modrinth.com/mod/fallingleaves",
+        "recommendation": "starred",
+        "selected": true
+    }
+}

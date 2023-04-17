@@ -32,6 +32,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.logging.Level;
 
 import static com.skcraft.launcher.util.SharedLocale.tr;
 
@@ -40,7 +41,6 @@ import static com.skcraft.launcher.util.SharedLocale.tr;
  */
 @Log
 public class LauncherFrame extends JFrame {
-
     private final Launcher launcher;
 
     @Getter
@@ -49,7 +49,9 @@ public class LauncherFrame extends JFrame {
     @Getter
     private final JScrollPane instanceScroll = new JScrollPane(instancesTable);
     private WebpagePanel webView;
-    private JSplitPane splitPane;
+    private JSplitPane horizontalSplitPane;
+    private JSplitPane verticalSplitPane;
+
     private final JButton launchButton = new JButton(SharedLocale.tr("launcher.launch"));
     private final JButton refreshButton = new JButton(SharedLocale.tr("launcher.checkForUpdates"));
     private final JButton optionsButton = new JButton(SharedLocale.tr("launcher.options"));
@@ -84,11 +86,15 @@ public class LauncherFrame extends JFrame {
     }
 
     private void initComponents() {
-        JPanel container = createContainerPanel();
-        container.setLayout(new MigLayout("fill, insets dialog", "[][]push[][]", "[grow][]"));
-
         webView = createNewsPanel();
-        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, instanceScroll, webView);
+        JPanel instanceButtonsPanel = createContainerPanel();
+        instanceButtonsPanel.setLayout(new MigLayout("fill, insets dialog", "[]", "[][]"));
+        JPanel playRowPanel = createContainerPanel();
+        playRowPanel.setLayout(new MigLayout("fill, insets dialog", "[]", "[]"));
+
+        verticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, instanceScroll, instanceButtonsPanel);
+        horizontalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, verticalSplitPane, webView);
+
         selfUpdateButton.setVisible(launcher.getUpdateManager().getPendingUpdate());
 
         launcher.getUpdateManager().addPropertyChangeListener(new PropertyChangeListener() {
@@ -96,27 +102,57 @@ public class LauncherFrame extends JFrame {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getPropertyName().equals("pendingUpdate")) {
                     selfUpdateButton.setVisible((Boolean) evt.getNewValue());
-
                 }
             }
         });
 
+        try {
+            Font font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("Minecrafter-reg.ttf"));
+            launchButton.setFont(font.deriveFont(Font.PLAIN, 20f));
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Font failed to load", e);
+        }
+        SwingHelper.flattenJSplitPane(horizontalSplitPane);
+        SwingHelper.flattenJSplitPane(verticalSplitPane);
+
         updateCheck.setSelected(true);
         instancesTable.setModel(instancesModel);
-        launchButton.setFont(launchButton.getFont().deriveFont(Font.BOLD));
-        splitPane.setDividerLocation(200);
-        splitPane.setDividerSize(4);
-        splitPane.setOpaque(false);
-        container.add(splitPane, "grow, wrap, span 5, gapbottom unrel, w null:680, h null:350");
-        SwingHelper.flattenJSplitPane(splitPane);
-        container.add(refreshButton);
-        container.add(updateCheck);
-        container.add(selfUpdateButton);
-        container.add(optionsButton);
-        container.add(launchButton);
 
-        add(container, BorderLayout.CENTER);
+        launchButton.setBackground(new Color(0x4C2A85));
+        launchButton.setForeground(Color.WHITE);
+        launchButton.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 2),
+                BorderFactory.createRaisedBevelBorder()));
 
+        horizontalSplitPane.setDividerLocation(200);
+        horizontalSplitPane.setDividerSize(10);
+        horizontalSplitPane.setEnabled(false);
+
+        verticalSplitPane.setDividerLocation(200);
+        verticalSplitPane.setDividerSize(80);
+        verticalSplitPane.setEnabled(false);
+
+        playRowPanel.add(horizontalSplitPane, "grow, wrap, gapbottom unrel, height 350");
+        playRowPanel.add(launchButton, "align 50% 50%, height 70, width 300");
+
+        instanceButtonsPanel.add(refreshButton, "width 200, wrap");
+        instanceButtonsPanel.add(optionsButton, "width 200");
+        // instanceButtonsPanel.add(updateCheck);
+        // instanceButtonsPanel.add(selfUpdateButton);
+        add(playRowPanel, BorderLayout.CENTER);
+
+        launchButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                launchButton
+                        .setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.WHITE, 2),
+                                BorderFactory.createRaisedBevelBorder()));
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                launchButton
+                        .setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 2),
+                                BorderFactory.createRaisedBevelBorder()));
+            }
+        });
         instancesModel.addTableModelListener(new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent e) {
@@ -189,9 +225,9 @@ public class LauncherFrame extends JFrame {
      * Popup the menu for the instances.
      *
      * @param component the component
-     * @param x mouse X
-     * @param y mouse Y
-     * @param selected the selected instance, possibly null
+     * @param x         mouse X
+     * @param y         mouse Y
+     * @param selected  the selected instance, possibly null
      */
     private void popupInstanceMenu(Component component, int x, int y, final Instance selected) {
         JPopupMenu popup = new JPopupMenu();
@@ -315,7 +351,8 @@ public class LauncherFrame extends JFrame {
     }
 
     private void confirmHardUpdate(Instance instance) {
-        if (!SwingHelper.confirmDialog(this, SharedLocale.tr("instance.confirmHardUpdate"), SharedLocale.tr("confirmTitle"))) {
+        if (!SwingHelper.confirmDialog(this, SharedLocale.tr("instance.confirmHardUpdate"),
+                SharedLocale.tr("confirmTitle"))) {
             return;
         }
 
@@ -345,7 +382,8 @@ public class LauncherFrame extends JFrame {
             }
         }, SwingExecutor.INSTANCE);
 
-        ProgressDialog.showProgress(this, future, SharedLocale.tr("launcher.checkingTitle"), SharedLocale.tr("launcher.checkingStatus"));
+        ProgressDialog.showProgress(this, future, SharedLocale.tr("launcher.checkingTitle"),
+                SharedLocale.tr("launcher.checkingStatus"));
         SwingHelper.addErrorDialogCallback(this, future);
     }
 

@@ -16,6 +16,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.formdev:flatlaf:3.1'
     implementation project(path: ':launcher')
     implementation 'io.github.cottonmc.insubstantial:substance:7.3.1-SNAPSHOT'
 }

@@ -6,11 +6,22 @@
 
 package com.skcraft.launcher.skin;
 
-import org.pushingpixels.substance.api.SubstanceLookAndFeel;
+import java.awt.*;
+import javax.swing.*;
 
-public class LauncherLookAndFeel extends SubstanceLookAndFeel {
+import com.formdev.flatlaf.FlatDarkLaf;
 
+public class LauncherLookAndFeel extends FlatDarkLaf {
     public LauncherLookAndFeel() {
-        super(new LauncherSkin());
+        FlatDarkLaf.setup();
+        UIManager.put("Panel.background", new Color(0x1e1e1e));
+        UIManager.put("SplitPane.background", new Color(0x1e1e1e));
+        UIManager.put("Button.hoverBorderColor", new Color(0xFFFFFF));
+        UIManager.put("Button.focusedBorderColor", new Color(0x4C2A85));
+        UIManager.put("Table.rowHeight", 30);
+        UIManager.put("Table.selectionForeground", new Color(0xFFFFFF));
+        UIManager.put("Table.selectionInactiveBackground", new Color(0, 0, 0, 0));
+        UIManager.put("Table.focusCellBackground", new Color(0, 0, 0, 0));
+        UIManager.put("Table.selectionBackground", new Color(0, 0, 0, 0));
     }
 }

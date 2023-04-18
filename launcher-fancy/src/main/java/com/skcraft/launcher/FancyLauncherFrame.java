@@ -23,8 +23,9 @@ public class FancyLauncherFrame extends LauncherFrame {
     public FancyLauncherFrame(@NonNull Launcher launcher) {
         super(launcher);
 
-        setSize(900, 500);
-        setResizable(false);        setLocationRelativeTo(null);
+        setSize(1024, 606);
+        setResizable(false);
+        setLocationRelativeTo(null);
 
         SwingHelper.removeOpaqueness(getInstancesTable());
         SwingHelper.removeOpaqueness(getInstanceScroll());
@@ -33,7 +34,7 @@ public class FancyLauncherFrame extends LauncherFrame {
 
     @Override
     protected JPanel createContainerPanel() {
-        return new JPanel();
+        return new FancyBackgroundPanel();
     }
 
     @Override

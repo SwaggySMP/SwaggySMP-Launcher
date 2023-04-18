@@ -50,7 +50,6 @@ public class LauncherFrame extends JFrame {
     private final JScrollPane instanceScroll = new JScrollPane(instancesTable);
     private WebpagePanel webView;
     private JSplitPane horizontalSplitPane;
-    private JSplitPane verticalSplitPane;
 
     private final JButton launchButton = new JButton(SharedLocale.tr("launcher.launch"));
     private final JButton refreshButton = new JButton(SharedLocale.tr("launcher.checkForUpdates"));
@@ -87,14 +86,9 @@ public class LauncherFrame extends JFrame {
 
     private void initComponents() {
         webView = createNewsPanel();
-        JPanel instanceButtonsPanel = createContainerPanel();
-        instanceButtonsPanel.setLayout(new MigLayout("fill, insets dialog", "[]", "[][]"));
         JPanel playRowPanel = createContainerPanel();
-        playRowPanel.setLayout(new MigLayout("fill, insets dialog", "[]", "[]"));
-
-        verticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, instanceScroll, instanceButtonsPanel);
-        horizontalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, verticalSplitPane, webView);
-
+        playRowPanel.setLayout(new MigLayout("fill, insets dialog", "[212!]10[]", "[][70!][70!]"));
+        horizontalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, instanceScroll, webView);
         selfUpdateButton.setVisible(launcher.getUpdateManager().getPendingUpdate());
 
         launcher.getUpdateManager().addPropertyChangeListener(new PropertyChangeListener() {
@@ -113,7 +107,6 @@ public class LauncherFrame extends JFrame {
             log.log(Level.WARNING, "Font failed to load", e);
         }
         SwingHelper.flattenJSplitPane(horizontalSplitPane);
-        SwingHelper.flattenJSplitPane(verticalSplitPane);
 
         updateCheck.setSelected(true);
         instancesTable.setModel(instancesModel);
@@ -124,18 +117,15 @@ public class LauncherFrame extends JFrame {
                 BorderFactory.createRaisedBevelBorder()));
 
         horizontalSplitPane.setDividerLocation(200);
-        horizontalSplitPane.setDividerSize(10);
+        horizontalSplitPane.setDividerSize(20);
         horizontalSplitPane.setEnabled(false);
+        horizontalSplitPane.setOpaque(false);
 
-        verticalSplitPane.setDividerLocation(200);
-        verticalSplitPane.setDividerSize(80);
-        verticalSplitPane.setEnabled(false);
+        playRowPanel.add(horizontalSplitPane, "grow, span 5, height 350, wrap");
+        playRowPanel.add(refreshButton, "width 220, aligny 100%,");
+        playRowPanel.add(launchButton, "span 1 2, align 50% 50%, height 65, width 300, wrap");
+        playRowPanel.add(optionsButton, "width 220, aligny 0%");
 
-        playRowPanel.add(horizontalSplitPane, "grow, wrap, gapbottom unrel, height 350");
-        playRowPanel.add(launchButton, "align 50% 50%, height 70, width 300");
-
-        instanceButtonsPanel.add(refreshButton, "width 200, wrap");
-        instanceButtonsPanel.add(optionsButton, "width 200");
         // instanceButtonsPanel.add(updateCheck);
         // instanceButtonsPanel.add(selfUpdateButton);
         add(playRowPanel, BorderLayout.CENTER);

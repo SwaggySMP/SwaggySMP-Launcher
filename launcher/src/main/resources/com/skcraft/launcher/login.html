@@ -1,1 +1,51 @@
-<p>OK: you can close the browser now</p>
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet" />
+		<style>
+			body,
+			html {
+				height: 90%;
+			}
+			* {
+				box-sizing: border-box;
+			}
+			.bg-image {
+				background: no-repeat center center fixed / cover;
+				position: fixed;
+				transform: scale(1.1);
+				z-index: -1;
+				-webkit-filter: blur(5px);
+				filter: blur(5px);
+			}
+			.bg-text {
+				color: white;
+				font-family: 'Bungee', cursive;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				z-index: 1;
+				text-align: center;
+			}
+			p {
+				font-size: 1.5em;
+				letter-spacing: 0.01em;
+				word-spacing: 0.2em;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="bg-image"><img src="./background.png" /></div>
+		<div class="bg-text">
+			<img
+				width="150"
+				alt="Eo circle green checkmark"
+				src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Eo_circle_green_checkmark.svg/512px-Eo_circle_green_checkmark.svg.png"
+			/>
+			<p>Account successfully added!</p>
+		</div>
+	</body>
+</html>

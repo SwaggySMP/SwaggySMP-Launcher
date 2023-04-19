@@ -32,6 +32,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.net.URL;
 import java.util.logging.Level;
 
 import static com.skcraft.launcher.util.SharedLocale.tr;
@@ -51,9 +52,11 @@ public class LauncherFrame extends JFrame {
     private WebpagePanel webView;
     private JSplitPane horizontalSplitPane;
 
+    private final JLabel attributionLabel = new JLabel("Image by Interstellar Cow#8015", JLabel.CENTER);
     private final JButton launchButton = new JButton(SharedLocale.tr("launcher.launch"));
     private final JButton refreshButton = new JButton(SharedLocale.tr("launcher.checkForUpdates"));
     private final JButton optionsButton = new JButton(SharedLocale.tr("launcher.options"));
+    private final JButton attributionButton = new JButton("Background attribution");
     private final JButton selfUpdateButton = new JButton(SharedLocale.tr("launcher.updateLauncher"));
     private final JCheckBox updateCheck = new JCheckBox(SharedLocale.tr("launcher.downloadUpdates"));
 
@@ -87,7 +90,7 @@ public class LauncherFrame extends JFrame {
     private void initComponents() {
         webView = createNewsPanel();
         JPanel playRowPanel = createContainerPanel();
-        playRowPanel.setLayout(new MigLayout("fill, insets dialog", "[212!]10[]", "[][70!][70!]"));
+        playRowPanel.setLayout(new MigLayout("fill, insets dialog", "[212!]10[]", "[][46!][46!][46!]"));
         horizontalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, instanceScroll, webView);
         selfUpdateButton.setVisible(launcher.getUpdateManager().getPendingUpdate());
 
@@ -120,11 +123,11 @@ public class LauncherFrame extends JFrame {
         horizontalSplitPane.setDividerSize(20);
         horizontalSplitPane.setEnabled(false);
         horizontalSplitPane.setOpaque(false);
-
         playRowPanel.add(horizontalSplitPane, "grow, span 5, height 350, wrap");
         playRowPanel.add(refreshButton, "width 220, aligny 100%,");
-        playRowPanel.add(launchButton, "span 1 2, align 50% 50%, height 65, width 300, wrap");
-        playRowPanel.add(optionsButton, "width 220, aligny 0%");
+        playRowPanel.add(launchButton, "span 1 3, align 50% 50%, height 65, width 300, wrap");
+        playRowPanel.add(optionsButton, "width 220, aligny 50%, wrap");
+        playRowPanel.add(attributionLabel, "width 220, aligny 0%");
 
         // instanceButtonsPanel.add(updateCheck);
         // instanceButtonsPanel.add(selfUpdateButton);
@@ -167,6 +170,15 @@ public class LauncherFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 launcher.getUpdateManager().performUpdate(LauncherFrame.this);
+            }
+        });
+        attributionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Desktop.getDesktop().browse(new URL("https://ebaa.dev/").toURI());
+                } catch (Exception error) {
+                }
             }
         });
 

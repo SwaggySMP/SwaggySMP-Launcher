@@ -58,11 +58,11 @@ public class AccountSelectDialog extends JDialog {
 		JScrollPane accountPane = new JScrollPane(accountList);
 		accountPane.setPreferredSize(new Dimension(280, 150));
 		accountPane.setAlignmentX(CENTER_ALIGNMENT);
+		accountPane.setBorder(BorderFactory.createLineBorder(new Color(0x4C2A85)));
 
 		loginButton.setFont(loginButton.getFont().deriveFont(Font.BOLD));
-		loginButton.setMargin(new Insets(0, 10, 0, 10));
 
-		//Start Buttons
+		// Start Buttons
 		buttonsPanel.setBorder(BorderFactory.createEmptyBorder(26, 13, 13, 13));
 		if (launcher.getConfig().isOfflineEnabled()) {
 			buttonsPanel.addElement(offlineButton);
@@ -71,7 +71,7 @@ public class AccountSelectDialog extends JDialog {
 		buttonsPanel.addElement(cancelButton);
 		buttonsPanel.addElement(loginButton);
 
-		//Login Buttons
+		// Login Buttons
 		JPanel loginButtonsRow = new JPanel(new BorderLayout(0, 5));
 		addMojangButton.setAlignmentX(CENTER_ALIGNMENT);
 		addMicrosoftButton.setAlignmentX(CENTER_ALIGNMENT);
@@ -104,8 +104,8 @@ public class AccountSelectDialog extends JDialog {
 
 		addMicrosoftButton.addActionListener(ev -> attemptMicrosoftLogin());
 
-		offlineButton.addActionListener(ev ->
-				setResult(new OfflineSession(launcher.getProperties().getProperty("offlinePlayerName"))));
+		offlineButton.addActionListener(
+				ev -> setResult(new OfflineSession(launcher.getProperties().getProperty("offlinePlayerName"))));
 
 		removeSelected.addActionListener(ev -> {
 			if (accountList.getSelectedValue() != null) {
@@ -150,8 +150,8 @@ public class AccountSelectDialog extends JDialog {
 		SettableProgress progress = new SettableProgress(status, -1);
 
 		ListenableFuture<?> future = launcher.getExecutor().submit(() -> {
-			Session newSession = launcher.getMicrosoftLogin().login(() ->
-					progress.set(SharedLocale.tr("login.loggingInStatus"), -1));
+			Session newSession = launcher.getMicrosoftLogin()
+					.login(() -> progress.set(SharedLocale.tr("login.loggingInStatus"), -1));
 
 			if (newSession != null) {
 				launcher.getAccounts().update(newSession.toSavedSession());
@@ -167,7 +167,8 @@ public class AccountSelectDialog extends JDialog {
 	}
 
 	private void attemptExistingLogin(SavedSession session) {
-		if (session == null) return;
+		if (session == null)
+			return;
 
 		LoginService loginService = launcher.getLoginService(session.getType());
 		RestoreSessionCallable callable = new RestoreSessionCallable(loginService, session);
@@ -191,7 +192,8 @@ public class AccountSelectDialog extends JDialog {
 						setResult(newSession);
 					}
 				} else {
-					SwingHelper.showErrorDialog(AccountSelectDialog.this, t.getLocalizedMessage(), SharedLocale.tr("errorTitle"), t);
+					SwingHelper.showErrorDialog(AccountSelectDialog.this, t.getLocalizedMessage(),
+							SharedLocale.tr("errorTitle"), t);
 				}
 			}
 		}, SwingExecutor.INSTANCE);
@@ -227,7 +229,8 @@ public class AccountSelectDialog extends JDialog {
 		}
 
 		@Override
-		public Component getListCellRendererComponent(JList<? extends SavedSession> list, SavedSession value, int index, boolean isSelected, boolean cellHasFocus) {
+		public Component getListCellRendererComponent(JList<? extends SavedSession> list, SavedSession value, int index,
+				boolean isSelected, boolean cellHasFocus) {
 			setText(value.getUsername());
 			if (value.getAvatarImage() != null) {
 				setIcon(new ImageIcon(value.getAvatarImage()));

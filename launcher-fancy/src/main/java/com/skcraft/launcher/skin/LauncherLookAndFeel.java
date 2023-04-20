@@ -34,7 +34,7 @@ public class LauncherLookAndFeel extends FlatDarkLaf {
         UIManager.put("Component.innerFocusWidth", 0);
 
         UIManager.put("Table.rowHeight", 25);
-        UIManager.put("Table.cellMargins", new Insets(10, 30, 10, 20));
+        UIManager.put("Table.cellMargins", new Insets(10, 10, 10, 10));
         UIManager.put("Table.selectionForeground", new Color(0xFFFFFF));
         UIManager.put("Table.selectionInactiveBackground", new Color(0, 0, 0, 0));
         UIManager.put("Table.focusCellBackground", new Color(0, 0, 0, 0));

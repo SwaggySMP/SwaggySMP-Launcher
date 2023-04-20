@@ -2,10 +2,10 @@
   "minimumVersion" : 1,
   "packages" : [
     {
-      "title" : "SwaggySMP Modpack",
-      "name" : "SwaggySMP_Modpack",
+      "title" : "SwaggySMP Semi-Vanilla Modpack",
+      "name" : "SwaggySMP_Semi-Vanilla",
       "version" : "v4.0.1",
-      "location" : "swaggysmp_modpack.json",
+      "location" : "swaggysmp_semi-vanilla.json",
       "priority" : 0
     }
   ]
